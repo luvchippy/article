@@ -1,0 +1,22 @@
+backend:
+  # 这里对接您的 GitHub 仓库
+  name: github
+  repo: luvchippy/article # ⚠️请确保您在 GitHub 创建了这个同名仓库！
+  branch: main
+
+# 图片保存路径
+media_folder: "docs/public/img"
+public_folder: "/img"
+
+# 后台的语言
+locale: 'zh_Hans'
+
+collections:
+  - name: "articles"
+    label: "✍️ 文章 (Articles)"
+    folder: "docs/articles"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "文章标题", name: "title", widget: "string"}
+      - {label: "文章正文", name: "body", widget: "markdown"}
