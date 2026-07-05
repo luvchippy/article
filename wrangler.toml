@@ -1,0 +1,10 @@
+name = "luvchippy-article"
+compatibility_date = "2025-07-05"
+
+[build]
+command = "bash build.sh"
+output_directory = "dist"
+
+# Environment variables - set in CF Dashboard:
+# GITHUB_CLIENT_ID
+# GITHUB_CLIENT_SECRET

@@ -1,0 +1,94 @@
+/**
+ * Glassmorphism & Vibe Theme for VitePress
+ */
+ :root {
+    --vp-c-brand-1: #646cff;
+    --vp-c-brand-2: #747bff;
+    
+    /* 强制全局暗色系微光背景 */
+    --vp-c-bg: #0d1117;
+    --vp-c-bg-alt: #161b22;
+  }
+  
+  html.dark {
+    --vp-c-bg: #0a0a0a;
+    --vp-c-bg-alt: #121212;
+  }
+  
+  /* ====================================
+     全局背景（毛玻璃与微光氛围）
+     ==================================== */
+  body {
+    background: radial-gradient(circle at 15% 50%, rgba(100, 108, 255, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(116, 123, 255, 0.08), transparent 25%),
+                var(--vp-c-bg);
+    background-attachment: fixed;
+  }
+  
+  /* ====================================
+     顶栏 (Nav Bar) 毛玻璃效果
+     ==================================== */
+  .VPNav {
+    background-color: rgba(10, 10, 10, 0.6) !important;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  /* ====================================
+     侧边栏 (Sidebar) 毛玻璃效果
+     ==================================== */
+  .VPSidebar {
+    background-color: rgba(18, 18, 18, 0.4) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255, 255, 255, 0.03);
+  }
+  
+  /* ====================================
+     文章卡片与主页特征框 (Features)
+     ==================================== */
+  .VPFeature {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  
+  .VPFeature:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(100, 108, 255, 0.3) !important;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px -10px rgba(100, 108, 255, 0.2);
+  }
+  
+  /* ====================================
+     英雄标题 (Hero Text) 渐变效果
+     ==================================== */
+  .name, .text {
+    background: -webkit-linear-gradient(315deg, #747bff 25%, #646cff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0px 2px 8px rgba(100, 108, 255, 0.3));
+  }
+  
+  /* ====================================
+     滚动条美化
+     ==================================== */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content — LuvChippy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════════
+       LUVCHIPPY ADMIN — Midnight Editorial
+       ═══════════════════════════════════════════ */
+
+    :root, [data-theme="dark"] {
+      --bg-root: #08080c;
+      --bg-surface: rgba(255,255,255,0.015);
+      --bg-surface-hover: rgba(255,255,255,0.03);
+      --bg-elevated: rgba(255,255,255,0.04);
+      --bg-input: rgba(255,255,255,0.04);
+      --border-subtle: rgba(255,255,255,0.05);
+      --border-default: rgba(255,255,255,0.08);
+      --border-focus: rgba(130,140,170,0.35);
+      --text-primary: rgba(255,255,255,0.90);
+      --text-secondary: rgba(255,255,255,0.50);
+      --text-tertiary: rgba(255,255,255,0.30);
+      --accent: #6b7db3;
+      --accent-hover: #7d8fc4;
+      --accent-soft: rgba(107,125,179,0.12);
+      --accent-border: rgba(107,125,179,0.25);
+      --login-bg: linear-gradient(135deg, #08080c 0%, #0d0f14 50%, #090b10 100%);
+      --login-card-bg: rgba(255,255,255,0.015);
+      --login-glow-1: rgba(107,125,179,0.06);
+      --login-glow-2: rgba(130,150,200,0.03);
+      --toggle-bg: rgba(255,255,255,0.06);
+      --toggle-border: rgba(255,255,255,0.08);
+      --scrollbar-thumb: rgba(255,255,255,0.08);
+      --scrollbar-thumb-hover: rgba(255,255,255,0.14);
+    }
+
+    [data-theme="light"] {
+      --bg-root: #f5f6f9;
+      --bg-surface: rgba(0,0,0,0.015);
+      --bg-surface-hover: rgba(0,0,0,0.04);
+      --bg-elevated: rgba(0,0,0,0.03);
+      --bg-input: rgba(0,0,0,0.03);
+      --border-subtle: rgba(0,0,0,0.06);
+      --border-default: rgba(0,0,0,0.10);
+      --border-focus: rgba(74,90,138,0.30);
+      --text-primary: rgba(0,0,0,0.88);
+      --text-secondary: rgba(0,0,0,0.50);
+      --text-tertiary: rgba(0,0,0,0.35);
+      --accent: #4a5a8a;
+      --accent-hover: #5e6e9a;
+      --accent-soft: rgba(74,90,138,0.08);
+      --accent-border: rgba(74,90,138,0.20);
+      --login-bg: linear-gradient(135deg, #f5f6f9 0%, #eef0f5 50%, #f8f9fb 100%);
+      --login-card-bg: rgba(255,255,255,0.60);
+      --login-glow-1: rgba(74,90,138,0.04);
+      --login-glow-2: rgba(100,120,160,0.02);
+      --toggle-bg: rgba(0,0,0,0.04);
+      --toggle-border: rgba(0,0,0,0.08);
+      --scrollbar-thumb: rgba(0,0,0,0.10);
+      --scrollbar-thumb-hover: rgba(0,0,0,0.18);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    :root {
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: var(--font-sans);
+      background: var(--bg-root);
+      color: var(--text-primary);
+      font-weight: 300;
+      letter-spacing: 0.01em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ═══════════ CUSTOM LOGIN SCREEN ═══════════ */
+    .login-container {
+      display: none;
+      position: fixed; inset: 0; z-index: 9999;
+      align-items: center; justify-content: center;
+      background: var(--login-bg);
+    }
+
+    .login-container::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 35%, var(--login-glow-1) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 80% 70%, var(--login-glow-2) 0%, transparent 60%);
+    }
+
+    .login-card {
+      position: relative;
+      width: 380px;
+      max-width: 90vw;
+      padding: 48px 40px 40px;
+      background: var(--login-card-bg);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(20px);
+      text-align: center;
+      animation: loginFadeIn 0.6s ease-out;
+    }
+
+    @keyframes loginFadeIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .login-logo {
+      font-size: 1.8rem;
+      font-weight: 200;
+      letter-spacing: 0.06em;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .login-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-tertiary);
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    .login-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%;
+      padding: 14px 0;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .login-btn:hover {
+      background: rgba(255,255,255,0.10);
+      border-color: var(--border-focus);
+      transform: translateY(-1px);
+    }
+
+    .login-btn:active { transform: translateY(0); }
+
+    .login-spinner {
+      width: 28px; height: 28px;
+      margin: 0 auto 20px;
+      border: 2px solid var(--border-default);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .login-loading-text {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      font-weight: 300;
+      margin-bottom: 4px;
+    }
+
+    .login-divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 28px 0;
+      position: relative;
+    }
+
+    .login-return {
+      display: block;
+      color: var(--text-tertiary);
+      font-size: 0.78rem;
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .login-return:hover { color: var(--text-secondary); }
+
+    /* ═══════════ DECAP CMS OVERRIDES ═══════════ */
+
+    /* --- Root & Background --- */
+    #nc-root {
+      background: var(--bg-root) !important;
+      font-family: var(--font-sans) !important;
+      min-height: 100vh;
+    }
+
+    /* --- Login Page Overrides --- */
+    #nc-root section {
+      background: transparent !important;
+    }
+
+    #nc-root button[type="submit"],
+    #nc-root form button,
+    #nc-root button[class*="LoginButton"],
+    #nc-root button[class*="GitHubButton"] {
+      background: rgba(255,255,255,0.06) !important;
+      border: 1px solid var(--border-default) !important;
+      border-radius: var(--radius-md) !important;
+      color: var(--text-primary) !important;
+      font-family: var(--font-sans) !important;
+      font-weight: 400 !important;
+      letter-spacing: 0.03em !important;
+      padding: 12px 24px !important;
+      transition: all var(--transition) !important;
+      cursor: pointer;
+    }
+
+    #nc-root form button:hover {
+      background: rgba(255,255,255,0.10) !important;
+      border-color: var(--border-focus) !important;
+    }
+
+    #nc-root input[type="text"],
+    #nc-root input[type="email"],
+    #nc-root input[type="password"],
+    #nc-root input[type="search"],
+    #nc-root input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
+      background: var(--bg-input) !important;
+      border: 1px solid var(--border-default) !important;
+      border-radius: var(--radius-sm) !important;
+      color: var(--text-primary) !important;
+      font-family: var(--font-sans) !important;
+      font-weight: 300 !important;
+      font-size: 0.9rem !important;
+      padding: 10px 14px !important;
+      transition: border-color var(--transition) !important;
+    }
+
+    #nc-root input:focus {
+      border-color: var(--border-focus) !important;
+      outline: none !important;
+      box-shadow: 0 0 0 3px var(--accent-soft) !important;
+    }
+
+    /* --- Sidebar --- */
+    #nc-root aside,
+    #nc-root nav[class*="Sidebar"],
+    div[class*="Sidebar"] {
+      background: rgba(255,255,255,0.008) !important;
+      border-right: 1px solid var(--border-subtle) !important;
+    }
+
+    #nc-root aside a,
+    #nc-root aside button,
+    #nc-root nav a,
+    nav[class*="Sidebar"] a {
+      color: var(--text-secondary) !important;
+      font-family: var(--font-sans) !important;
+      font-weight: 300 !important;
+      font-size: 0.85rem !important;
+      transition: all var(--transition) !important;
+      border-radius: var(--radius-sm) !important;
+    }
+
+    #nc-root aside a:hover,
+    #nc-root aside a.active,
+    #nc-root aside a[aria-current],
+    nav a[class*="active"] {
+      color: var(--text-primary) !important;
+      background: var(--bg-surface-hover) !important;
+    }
+
+    /* --- Top Bar --- */
+    #nc-root header,
+    #nc-root div[class*="AppHeader"],
+    div[class*="EditorToolbar"] {
+      background: var(--bg-root) !important;
+      border-bottom: 1px solid var(--border-subtle) !important;
+    }
+
+    #nc-root header button,
+    #nc-root header a,
+    div[class*="AppHeader"] button {
+      color: var(--text-secondary) !important;
+      font-family: var(--font-sans) !important;
+      transition: color var(--transition) !important;
+    }
+
+    #nc-root header button:hover,
+    #nc-root header a:hover {
+      color: var(--text-primary) !important;
+    }
+
+    /* --- Cards (Collection Items) --- */
+    #nc-root main a,
+    #nc-root main div[class*="Card"],
+    div[class*="EntryCard"] a,
+    div[class*="EntryCard"] {
+      background: var(--bg-surface) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: var(--radius-md) !important;
+      transition: all var(--transition) !important;
+      color: var(--text-primary) !important;
+      font-family: var(--font-sans) !important;
+    }
+
+    #nc-root main a:hover,
+    div[class*="EntryCard"]:hover {
+      background: var(--bg-surface-hover) !important;
+      border-color: var(--border-default) !important;
+      transform: translateY(-1px);
+    }
+
+    /* --- Buttons (general) --- */
+    #nc-root button:not([class*="Toolbar"]):not([class*="CloseButton"]) {
+      background: rgba(255,255,255,0.05) !important;
+      border: 1px solid var(--border-default) !important;
+      border-radius: var(--radius-sm) !important;
+      color: var(--text-secondary) !important;
+      font-family: var(--font-sans) !important;
+      font-weight: 400 !important;
+      font-size: 0.82rem !important;
+      transition: all var(--transition) !important;
+      cursor: pointer;
+    }
+
+    #nc-root button:hover:not([disabled]) {
+      background: rgba(255,255,255,0.08) !important;
+      color: var(--text-primary) !important;
+      border-color: var(--border-focus) !important;
+    }
+
+    /* --- Editor Area --- */
+    #nc-root textarea,
+    #nc-root [contenteditable="true"],
+    div[class*="EditorControl"] textarea,
+    div[class*="Markdown"] textarea {
+      background: var(--bg-surface) !important;
+      border: 1px solid var(--border-default) !important;
+      border-radius: var(--radius-sm) !important;
+      color: var(--text-primary) !important;
+      font-family: var(--font-mono) !important;
+      font-weight: 300 !important;
+      font-size: 0.9rem !important;
+      line-height: 1.7 !important;
+      padding: 16px !important;
+    }
+
+    #nc-root textarea:focus,
+    #nc-root [contenteditable="true"]:focus {
+      border-color: var(--border-focus) !important;
+      outline: none !important;
+      box-shadow: 0 0 0 3px var(--accent-soft) !important;
+    }
+
+    /* --- Select / Dropdown --- */
+    #nc-root select,
+    #nc-root div[class*="Select"] select {
+      background: var(--bg-input) !important;
+      border: 1px solid var(--border-default) !important;
+      border-radius: var(--radius-sm) !important;
+      color: var(--text-primary) !important;
+      font-family: var(--font-sans) !important;
+      font-weight: 300 !important;
+      padding: 8px 12px !important;
+    }
+
+    /* --- Labels --- */
+    #nc-root label {
+      color: var(--text-secondary) !important;
+      font-family: var(--font-sans) !important;
+      font-weight: 400 !important;
+      font-size: 0.82rem !important;
+      letter-spacing: 0.04em !important;
+      text-transform: uppercase !important;
+      margin-bottom: 6px !important;
+      display: block;
+    }
+
+    /* --- Modal --- */
+    div[class*="Modal"] > div,
+    div[class*="Dialog"] > div {
+      background: rgba(12,12,18,0.98) !important;
+      border: 1px solid var(--border-default) !important;
+      border-radius: var(--radius-lg) !important;
+      backdrop-filter: blur(20px);
+    }
+
+    /* --- Status / Badges --- */
+    span[class*="Badge"],
+    span[class*="Status"] {
+      border-radius: 20px !important;
+      font-family: var(--font-sans) !important;
+      font-weight: 400 !important;
+      font-size: 0.7rem !important;
+      letter-spacing: 0.05em !important;
+      text-transform: uppercase;
+      padding: 2px 10px !important;
+    }
+
+    /* --- Scrollbar --- */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
+    /* --- Toast / Notifications --- */
+    div[class*="Toast"] {
+      background: rgba(14,14,22,0.96) !important;
+      border: 1px solid var(--border-default) !important;
+      border-radius: var(--radius-md) !important;
+      color: var(--text-primary) !important;
+      font-family: var(--font-sans) !important;
+      backdrop-filter: blur(12px);
+    }
+
+    /* --- Spinner Override --- */
+    #nc-root [class*="spinner"],
+    svg[class*="Spinner"] {
+      color: var(--accent) !important;
+    }
+
+    /* --- Top bar collection name --- */
+    #nc-root h2,
+    #nc-root h3 {
+      font-family: var(--font-sans) !important;
+      font-weight: 300 !important;
+      letter-spacing: 0.02em !important;
+      color: var(--text-primary) !important;
+    }
+
+    /* --- "New Entry" etc --- */
+    #nc-root a[class*="AddButton"] {
+      background: var(--accent-soft) !important;
+      border-color: rgba(107,125,179,0.25) !important;
+      color: var(--accent) !important;
+      font-weight: 400 !important;
+    }
+
+    #nc-root a[class*="AddButton"]:hover {
+      background: rgba(107,125,179,0.18) !important;
+      border-color: var(--accent) !important;
+      color: var(--accent-hover) !important;
+    }
+
+    /* --- Widget: List items --- */
+    div[class*="ListControl"] > div,
+    div[class*="ObjectWidget"] > div {
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: var(--radius-md) !important;
+      background: var(--bg-surface) !important;
+      padding: 12px !important;
+      margin-bottom: 8px !important;
+    }
+
+    /* --- Image widget placeholder --- */
+    div[class*="ImageControl"] > div {
+      border: 1px dashed var(--border-default) !important;
+      border-radius: var(--radius-md) !important;
+      background: var(--bg-surface) !important;
+    }
+
+    /* --- Publish button area --- */
+    #nc-root button[class*="PublishButton"],
+    #nc-root button[class*="SaveButton"] {
+      background: var(--accent-soft) !important;
+      border-color: rgba(107,125,179,0.30) !important;
+      color: var(--accent) !important;
+      font-weight: 500 !important;
+    }
+
+    #nc-root button[class*="PublishButton"]:hover,
+    #nc-root button[class*="SaveButton"]:hover {
+      background: rgba(107,125,179,0.18) !important;
+      border-color: var(--accent) !important;
+      color: var(--accent-hover) !important;
+    }
+
+    /* ═══════════ THEME TOGGLE ═══════════ */
+    .theme-toggle {
+      position: fixed;
+      top: 16px; right: 16px;
+      z-index: 10000;
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--toggle-bg);
+      border: 1px solid var(--toggle-border);
+      color: var(--text-secondary);
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      outline: none;
+    }
+
+    .theme-toggle:hover {
+      color: var(--text-primary);
+      border-color: var(--border-focus);
+      transform: scale(1.08);
+    }
+
+    .theme-toggle svg {
+      width: 18px; height: 18px;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .theme-toggle svg.sun   { display: block; }
+    .theme-toggle svg.moon  { display: none; }
+    [data-theme="light"] .theme-toggle svg.sun  { display: none; }
+    [data-theme="light"] .theme-toggle svg.moon { display: block; }
+
+    .theme-toggle.rotating svg {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle (outside CMS root, persists across states) -->
+  <button class="theme-toggle" id="theme-toggle" title="Switch theme" aria-label="Switch theme">
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="12" cy="12" r="5"/>
+      <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+      <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    </svg>
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  </button>
+
+  <!-- Custom Login Screen (shown before Decap CMS mounts) -->
+  <div id="custom-login" class="login-container">
+    <div class="login-card">
+      <div class="login-logo">LuvChippy</div>
+      <div class="login-subtitle">Content Manager</div>
+      <div class="login-spinner"></div>
+      <div class="login-loading-text">Loading editor...</div>
+      <div class="login-divider"></div>
+      <a href="/" class="login-return">← Back to Homepage</a>
+    </div>
+  </div>
+
+  <!-- Decap CMS SPA -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+  <script>
+    // ─── Preview Styles (matches VitePress reading experience) ───
+    CMS.registerPreviewStyle('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap');
+
+    CMS.registerPreviewStyle(null, { raw: true, value: `
+      .nc-previewPane-frame body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-weight: 300;
+        color: rgba(0,0,0,0.88);
+        line-height: 1.8;
+        font-size: 16px;
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 40px 24px 80px;
+      }
+      .nc-previewPane-frame h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin: 0 0 8px 0;
+        color: #111;
+      }
+      .nc-previewPane-frame h2 {
+        font-size: 1.4rem;
+        font-weight: 500;
+        margin: 36px 0 12px;
+        color: #222;
+        padding-bottom: 6px;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+      }
+      .nc-previewPane-frame h3 {
+        font-size: 1.15rem;
+        font-weight: 500;
+        margin: 24px 0 8px;
+        color: #333;
+      }
+      .nc-previewPane-frame p {
+        margin: 0 0 16px;
+      }
+      .nc-previewPane-frame blockquote {
+        margin: 16px 0;
+        padding: 12px 20px;
+        border-left: 3px solid #6b7db3;
+        background: rgba(107,125,179,0.05);
+        border-radius: 0 6px 6px 0;
+        color: #555;
+        font-style: italic;
+      }
+      .nc-previewPane-frame code {
+        font-family: 'JetBrains Mono', 'SF Mono', monospace;
+        font-size: 0.88em;
+        background: rgba(0,0,0,0.06);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .nc-previewPane-frame pre {
+        background: #f5f5f5;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 16px 0;
+        border: 1px solid rgba(0,0,0,0.06);
+      }
+      .nc-previewPane-frame pre code {
+        background: none;
+        padding: 0;
+        font-size: 0.85em;
+      }
+      .nc-previewPane-frame img {
+        max-width: 100%;
+        border-radius: 8px;
+        margin: 16px 0;
+      }
+      .nc-previewPane-frame ul, .nc-previewPane-frame ol {
+        padding-left: 24px;
+        margin: 0 0 16px;
+      }
+      .nc-previewPane-frame li {
+        margin-bottom: 6px;
+      }
+      .nc-previewPane-frame a {
+        color: #6b7db3;
+        text-decoration: none;
+      }
+      .nc-previewPane-frame a:hover {
+        text-decoration: underline;
+      }
+      .nc-previewPane-frame hr {
+        border: none;
+        border-top: 1px solid rgba(0,0,0,0.08);
+        margin: 32px 0;
+      }
+      .nc-previewPane-frame table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+      }
+      .nc-previewPane-frame th, .nc-previewPane-frame td {
+        border: 1px solid rgba(0,0,0,0.1);
+        padding: 10px 14px;
+        text-align: left;
+      }
+      .nc-previewPane-frame th {
+        background: rgba(0,0,0,0.03);
+        font-weight: 500;
+      }
+    `});
+
+    // ─── Login Page Router ───
+    // Custom loading screen shows while Decap CMS initializes.
+    // Once CMS mounts its own UI (login form or dashboard), we hide ours.
+    (function() {
+      var loginEl = document.getElementById('custom-login');
+      var hidden = false;
+
+      function hideLogin() {
+        if (hidden) return;
+        hidden = true;
+        loginEl.style.opacity = '0';
+        loginEl.style.transition = 'opacity 0.35s ease';
+        setTimeout(function() { loginEl.style.display = 'none'; }, 400);
+      }
+
+      // Show custom loading screen immediately
+      loginEl.style.display = 'flex';
+
+      // If Decap CMS has a stored auth token, hide our loader quickly
+      try {
+        var hasUser = localStorage.getItem('netlify-cms-user') || localStorage.getItem('decap-cms-user');
+        if (hasUser) {
+          // Authenticated — Decap CMS will show dashboard; fade loader after brief delay
+          setTimeout(hideLogin, 800);
+        }
+      } catch(e) {}
+
+      // Watch for Decap CMS mounting inside #nc-root
+      var checkInterval = setInterval(function() {
+        var ncRoot = document.getElementById('nc-root');
+        if (ncRoot && ncRoot.children.length > 0 && ncRoot.textContent.trim().length > 0) {
+          clearInterval(checkInterval);
+          // CMS has mounted — show our loader for a moment then hand off
+          setTimeout(hideLogin, 400);
+        }
+      }, 300);
+
+      // Safety: hide after 8 seconds regardless
+      setTimeout(function() {
+        clearInterval(checkInterval);
+        hideLogin();
+      }, 8000);
+    })();
+
+    // ─── Theme Switcher ───
+    (function() {
+      var STORAGE_KEY = 'luvchippy-admin-theme';
+      var toggle  = document.getElementById('theme-toggle');
+      var html    = document.documentElement;
+
+      // Determine initial theme: stored pref → system → dark fallback
+      function getTheme() {
+        var stored = localStorage.getItem(STORAGE_KEY);
+        if (stored === 'light' || stored === 'dark') return stored;
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+        return 'dark';
+      }
+
+      function applyTheme(theme, animate) {
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem(STORAGE_KEY, theme);
+        if (animate) {
+          toggle.classList.add('rotating');
+          setTimeout(function() { toggle.classList.remove('rotating'); }, 500);
+        }
+      }
+
+      // Init
+      applyTheme(getTheme(), false);
+
+      // Toggle on click
+      toggle.addEventListener('click', function() {
+        var current = html.getAttribute('data-theme');
+        applyTheme(current === 'dark' ? 'light' : 'dark', true);
+      });
+
+      // Listen for system preference changes
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+          // Only auto-switch if user hasn't manually chosen
+          if (!localStorage.getItem(STORAGE_KEY)) {
+            applyTheme(e.matches ? 'dark' : 'light', false);
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

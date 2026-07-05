@@ -1,0 +1,46 @@
+backend:
+  name: github
+  repo: luvchippy/article
+  branch: main
+  base_url: https://article.923577.xyz
+  auth_endpoint: auth
+
+media_folder: "docs/public/img"
+public_folder: "/img"
+
+locale: 'zh_Hans'
+site_url: https://article.923577.xyz
+
+collections:
+  - name: "articles"
+    label: "✍️ 文章"
+    label_singular: "文章"
+    folder: "docs/articles"
+    create: true
+    slug: "{{slug}}"
+    editor:
+      preview: true
+    fields:
+      - {label: "标题", name: "title", widget: "string"}
+      - {label: "发布日期", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, required: false}
+      - {label: "摘要", name: "description", widget: "text", required: false}
+      - {label: "标签", name: "tags", widget: "list", required: false, default: []}
+      - {label: "VitePress 目录深度", name: "outline", widget: "hidden", default: "deep", required: false}
+      - {label: "正文", name: "body", widget: "markdown"}
+
+  - name: "settings"
+    label: "⚙️ 站点设置"
+    files:
+      - name: "general"
+        label: "通用设置"
+        file: "docs/public/admin/settings.yml"
+        fields:
+          - {label: "站点标题", name: "site_title", widget: "string", default: "LuvChippy"}
+          - {label: "站点描述", name: "site_description", widget: "text", default: "个人知识库"}
+          - name: "sidebar"
+            label: "侧边栏链接"
+            widget: "list"
+            summary: "{{fields.text}} → {{fields.link}}"
+            fields:
+              - {label: "显示文字", name: "text", widget: "string"}
+              - {label: "链接地址", name: "link", widget: "string"}
