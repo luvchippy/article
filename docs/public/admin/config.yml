@@ -1,3 +1,7 @@
+# ─── LuvChippy Decap CMS Configuration ───
+# Access gate: password login (admin/923577276) via functions/api/[[route]].js
+# After passing gate, Decap CMS uses GitHub OAuth for content operations.
+
 backend:
   name: github
   repo: luvchippy/article

@@ -186,6 +186,57 @@
       margin-bottom: 4px;
     }
 
+    .login-error {
+      color: #e0556a;
+      font-size: 0.78rem;
+      font-weight: 400;
+      margin-bottom: 16px;
+      min-height: 20px;
+      transition: opacity 0.2s;
+    }
+
+    .login-input-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .login-input-group label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      font-weight: 400;
+    }
+
+    .login-input-group input {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 300;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+
+    .login-input-group input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    .login-welcome {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
     .login-divider {
       height: 1px;
       background: var(--border-subtle);
@@ -551,15 +602,34 @@
     </svg>
   </button>
 
-  <!-- Custom Login Screen (shown before Decap CMS mounts) -->
+  <!-- Custom Login Screen (gate before Decap CMS) -->
   <div id="custom-login" class="login-container">
-    <div class="login-card">
+    <div class="login-card" id="login-card">
       <div class="login-logo">LuvChippy</div>
       <div class="login-subtitle">Content Manager</div>
-      <div class="login-spinner"></div>
-      <div class="login-loading-text">Loading editor...</div>
-      <div class="login-divider"></div>
-      <a href="/" class="login-return">← Back to Homepage</a>
+
+      <!-- Loading state (shown during auth check) -->
+      <div id="login-loading">
+        <div class="login-spinner"></div>
+        <div class="login-loading-text">Loading editor...</div>
+      </div>
+
+      <!-- Login form (shown when not authenticated) -->
+      <div id="login-form" style="display:none;">
+        <div class="login-welcome">请登录以管理文章内容。</div>
+        <div class="login-error" id="login-error"></div>
+        <div class="login-input-group">
+          <label for="login-username">用户名</label>
+          <input type="text" id="login-username" placeholder="admin" autocomplete="username" />
+        </div>
+        <div class="login-input-group">
+          <label for="login-password">密码</label>
+          <input type="password" id="login-password" placeholder="········" autocomplete="current-password" />
+        </div>
+        <button class="login-btn" id="login-submit" type="button">登 录</button>
+        <div class="login-divider"></div>
+        <a href="/" class="login-return">← Back to Homepage</a>
+      </div>
     </div>
   </div>
 
@@ -674,11 +744,15 @@
       }
     `});
 
-    // ─── Login Page Router ───
-    // Custom loading screen shows while Decap CMS initializes.
-    // Once CMS mounts its own UI (login form or dashboard), we hide ours.
+    // ─── Login Gate (password wall before Decap CMS) ───
     (function() {
       var loginEl = document.getElementById('custom-login');
+      var loginFormEl = document.getElementById('login-form');
+      var loginLoadingEl = document.getElementById('login-loading');
+      var loginErrorEl = document.getElementById('login-error');
+      var usernameInput = document.getElementById('login-username');
+      var passwordInput = document.getElementById('login-password');
+      var submitBtn = document.getElementById('login-submit');
       var hidden = false;
 
       function hideLogin() {
@@ -689,33 +763,92 @@
         setTimeout(function() { loginEl.style.display = 'none'; }, 400);
       }
 
-      // Show custom loading screen immediately
+      function showError(msg) {
+        loginErrorEl.textContent = msg;
+        submitBtn.disabled = false;
+        submitBtn.textContent = '登 录';
+        submitBtn.style.opacity = '1';
+      }
+
+      function setLoading(isLoading) {
+        submitBtn.disabled = isLoading;
+        submitBtn.textContent = isLoading ? '登录中...' : '登 录';
+        submitBtn.style.opacity = isLoading ? '0.6' : '1';
+      }
+
+      // Check if already authenticated via JWT
+      function isAuthenticated() {
+        try {
+          var token = localStorage.getItem('luvchippy-admin-token');
+          if (!token) return false;
+          // Check expiry client-side (JWT payload is base64url)
+          var parts = token.split('.');
+          if (parts.length !== 3) return false;
+          var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+          if (payload.exp && Date.now() / 1000 > payload.exp) {
+            localStorage.removeItem('luvchippy-admin-token');
+            return false;
+          }
+          return true;
+        } catch(e) {
+          return false;
+        }
+      }
+
+      // Show login screen immediately
       loginEl.style.display = 'flex';
 
-      // If Decap CMS has a stored auth token, hide our loader quickly
-      try {
-        var hasUser = localStorage.getItem('netlify-cms-user') || localStorage.getItem('decap-cms-user');
-        if (hasUser) {
-          // Authenticated — Decap CMS will show dashboard; fade loader after brief delay
-          setTimeout(hideLogin, 800);
-        }
-      } catch(e) {}
+      if (isAuthenticated()) {
+        // Already logged in — quickly hide overlay and load CMS
+        setTimeout(hideLogin, 400);
+      } else {
+        // Show login form after a brief moment
+        setTimeout(function() {
+          loginLoadingEl.style.display = 'none';
+          loginFormEl.style.display = 'block';
+          usernameInput.focus();
+        }, 300);
+      }
 
-      // Watch for Decap CMS mounting inside #nc-root
-      var checkInterval = setInterval(function() {
-        var ncRoot = document.getElementById('nc-root');
-        if (ncRoot && ncRoot.children.length > 0 && ncRoot.textContent.trim().length > 0) {
-          clearInterval(checkInterval);
-          // CMS has mounted — show our loader for a moment then hand off
-          setTimeout(hideLogin, 400);
-        }
-      }, 300);
+      // Handle form submission
+      submitBtn.addEventListener('click', function() {
+        var username = usernameInput.value.trim();
+        var password = passwordInput.value;
 
-      // Safety: hide after 8 seconds regardless
-      setTimeout(function() {
-        clearInterval(checkInterval);
-        hideLogin();
-      }, 8000);
+        if (!username || !password) {
+          showError('请输入用户名和密码');
+          return;
+        }
+
+        setLoading(true);
+        loginErrorEl.textContent = '';
+
+        fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: username, password: password })
+        })
+        .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data }; }); })
+        .then(function(result) {
+          if (result.status === 200 && result.data.token) {
+            localStorage.setItem('luvchippy-admin-token', result.data.token);
+            hideLogin();
+          } else {
+            showError(result.data.error || '登录失败，请重试');
+            passwordInput.value = '';
+            passwordInput.focus();
+          }
+        })
+        .catch(function(err) {
+          showError('网络错误，请检查连接后重试');
+          setLoading(false);
+        });
+      });
+
+      // Submit on Enter key
+      passwordInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') submitBtn.click();
+      });
     })();
 
     // ─── Theme Switcher ───

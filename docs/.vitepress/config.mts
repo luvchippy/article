@@ -18,6 +18,7 @@ export default defineConfig({
       {
         text: '✍️ 我的文章',
         items: [
+          { text: '开发日志：全栈网站矩阵搭建实录', link: '/articles/dev-log' },
           { text: 'Vibe Coding：与 AI 共舞', link: '/articles/vibecoding' },
           { text: 'Hello World', link: '/articles/hello-world' }
         ]
