@@ -11,7 +11,8 @@ export default defineConfig({
     nav: [
       { text: '首页', link: '/' },
       { text: '文章列表', link: '/articles/vibecoding' },
-      { text: '返回个人主页', link: 'https://923577.xyz' }
+      { text: '返回个人主页', link: 'https://923577.xyz' },
+      { text: '⚙', link: '/admin/', title: '管理后台' }
     ],
 
     sidebar: [

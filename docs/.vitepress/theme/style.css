@@ -1,94 +1,111 @@
 /**
- * Glassmorphism & Vibe Theme for VitePress
+ * LuvChippy Article Theme — Glassmorphism with light/dark support
  */
- :root {
-    --vp-c-brand-1: #646cff;
-    --vp-c-brand-2: #747bff;
-    
-    /* 强制全局暗色系微光背景 */
-    --vp-c-bg: #0d1117;
-    --vp-c-bg-alt: #161b22;
-  }
-  
-  html.dark {
-    --vp-c-bg: #0a0a0a;
-    --vp-c-bg-alt: #121212;
-  }
-  
-  /* ====================================
-     全局背景（毛玻璃与微光氛围）
-     ==================================== */
-  body {
-    background: radial-gradient(circle at 15% 50%, rgba(100, 108, 255, 0.08), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(116, 123, 255, 0.08), transparent 25%),
-                var(--vp-c-bg);
-    background-attachment: fixed;
-  }
-  
-  /* ====================================
-     顶栏 (Nav Bar) 毛玻璃效果
-     ==================================== */
-  .VPNav {
-    background-color: rgba(10, 10, 10, 0.6) !important;
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  }
-  
-  /* ====================================
-     侧边栏 (Sidebar) 毛玻璃效果
-     ==================================== */
-  .VPSidebar {
-    background-color: rgba(18, 18, 18, 0.4) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-right: 1px solid rgba(255, 255, 255, 0.03);
-  }
-  
-  /* ====================================
-     文章卡片与主页特征框 (Features)
-     ==================================== */
-  .VPFeature {
-    background: rgba(255, 255, 255, 0.02) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 12px;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  }
-  
-  .VPFeature:hover {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(100, 108, 255, 0.3) !important;
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px -10px rgba(100, 108, 255, 0.2);
-  }
-  
-  /* ====================================
-     英雄标题 (Hero Text) 渐变效果
-     ==================================== */
-  .name, .text {
-    background: -webkit-linear-gradient(315deg, #747bff 25%, #646cff);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0px 2px 8px rgba(100, 108, 255, 0.3));
-  }
-  
-  /* ====================================
-     滚动条美化
-     ==================================== */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
+:root {
+  --vp-c-brand-1: #4a5a8a;
+  --vp-c-brand-2: #5e6e9a;
+  --vp-c-bg: #fcfcfd;
+  --vp-c-bg-alt: #f2f3f7;
+  --vp-c-text-1: rgba(15, 15, 20, 0.88);
+  --vp-c-text-2: rgba(15, 15, 20, 0.55);
+  --nav-bg: rgba(252, 252, 253, 0.75);
+  --nav-border: rgba(0, 0, 0, 0.06);
+  --sidebar-bg: rgba(242, 243, 247, 0.6);
+  --sidebar-border: rgba(0, 0, 0, 0.04);
+  --feature-bg: rgba(0, 0, 0, 0.02);
+  --feature-border: rgba(0, 0, 0, 0.06);
+  --feature-hover-bg: rgba(0, 0, 0, 0.04);
+  --feature-hover-border: rgba(74, 90, 138, 0.3);
+  --hero-gradient-from: #4a5a8a;
+  --hero-gradient-to: #2d3855;
+}
+
+html.dark {
+  --vp-c-brand-1: #646cff;
+  --vp-c-brand-2: #747bff;
+  --vp-c-bg: #0a0a0a;
+  --vp-c-bg-alt: #121212;
+  --vp-c-text-1: rgba(255, 255, 255, 0.87);
+  --vp-c-text-2: rgba(255, 255, 255, 0.55);
+  --nav-bg: rgba(10, 10, 10, 0.6);
+  --nav-border: rgba(255, 255, 255, 0.05);
+  --sidebar-bg: rgba(18, 18, 18, 0.4);
+  --sidebar-border: rgba(255, 255, 255, 0.03);
+  --feature-bg: rgba(255, 255, 255, 0.02);
+  --feature-border: rgba(255, 255, 255, 0.05);
+  --feature-hover-bg: rgba(255, 255, 255, 0.05);
+  --feature-hover-border: rgba(100, 108, 255, 0.3);
+  --hero-gradient-from: #747bff;
+  --hero-gradient-to: #646cff;
+}
+
+/* ════════════════════════════════════════
+   全局背景
+   ════════════════════════════════════════ */
+body {
+  background: var(--vp-c-bg);
+  background-attachment: fixed;
+}
+
+/* ════════════════════════════════════════
+   顶栏 (Nav Bar) 毛玻璃
+   ════════════════════════════════════════ */
+.VPNav {
+  background-color: var(--nav-bg) !important;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-bottom: 1px solid var(--nav-border);
+}
+
+/* ════════════════════════════════════════
+   侧边栏 (Sidebar) 毛玻璃
+   ════════════════════════════════════════ */
+.VPSidebar {
+  background-color: var(--sidebar-bg) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-right: 1px solid var(--sidebar-border);
+}
+
+/* ════════════════════════════════════════
+   文章卡片 (Features) 毛玻璃
+   ════════════════════════════════════════ */
+.VPFeature {
+  background: var(--feature-bg) !important;
+  border: 1px solid var(--feature-border) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.VPFeature:hover {
+  background: var(--feature-hover-bg) !important;
+  border: 1px solid var(--feature-hover-border) !important;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px -10px rgba(100, 108, 255, 0.2);
+}
+
+/* ════════════════════════════════════════
+   英雄标题 (Hero Text) 渐变
+   ════════════════════════════════════════ */
+.name, .text {
+  background: -webkit-linear-gradient(315deg, var(--hero-gradient-from) 25%, var(--hero-gradient-to));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html.dark .name, html.dark .text {
+  filter: drop-shadow(0px 2px 8px rgba(100, 108, 255, 0.3));
+}
+
+/* ════════════════════════════════════════
+   滚动条美化
+   ════════════════════════════════════════ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(128, 128, 128, 0.2); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(128, 128, 128, 0.35); }
+html.dark ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); }
+html.dark ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
