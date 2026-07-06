@@ -1,5 +1,10 @@
 <template>
   <div class="custom-home">
+    <!-- Theme toggle -->
+    <button class="theme-toggle" @click="toggleTheme" :title="isDark ? '切换浅色' : '切换深色'">
+      {{ isDark ? '☀️' : '🌙' }}
+    </button>
+
     <!-- Left: 3/4 hero container -->
     <div class="home-left">
       <div class="hero-box">
@@ -27,7 +32,27 @@
 </template>
 
 <script setup lang="ts">
-// Custom home layout — no features, split hero + recent articles
+import { ref, onMounted } from 'vue'
+
+const isDark = ref(true)
+
+function toggleTheme() {
+  isDark.value = !isDark.value
+  document.documentElement.classList.toggle('dark', isDark.value)
+  localStorage.setItem('vitepress-theme', isDark.value ? 'dark' : 'light')
+}
+
+onMounted(() => {
+  const stored = localStorage.getItem('vitepress-theme')
+  if (stored === 'light') {
+    isDark.value = false
+    document.documentElement.classList.remove('dark')
+  } else if (!stored) {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    isDark.value = prefersDark
+    document.documentElement.classList.toggle('dark', prefersDark)
+  }
+})
 </script>
 
 <style scoped>
@@ -37,6 +62,26 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
+  position: relative;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  background: none;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all .25s;
+  z-index: 10;
+  line-height: 1;
+}
+.theme-toggle:hover {
+  border-color: var(--vp-c-brand-1);
+  background: var(--vp-c-bg-alt);
 }
 
 /* ── Left: 3/4 ── */
@@ -71,7 +116,7 @@
 }
 
 .hero-c {
-  font-weight: 300;
+  font-weight: 200;
 }
 
 .hero-line {
