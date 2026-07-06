@@ -1,898 +1,299 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Content — LuvChippy</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
-  <style>
-    /* ═══════════════════════════════════════════
-       LUVCHIPPY ADMIN — Midnight Editorial
-       ═══════════════════════════════════════════ */
-
-    :root, [data-theme="dark"] {
-      --bg-root: #08080c;
-      --bg-surface: rgba(255,255,255,0.015);
-      --bg-surface-hover: rgba(255,255,255,0.03);
-      --bg-elevated: rgba(255,255,255,0.04);
-      --bg-input: rgba(255,255,255,0.04);
-      --border-subtle: rgba(255,255,255,0.05);
-      --border-default: rgba(255,255,255,0.08);
-      --border-focus: rgba(130,140,170,0.35);
-      --text-primary: rgba(255,255,255,0.90);
-      --text-secondary: rgba(255,255,255,0.50);
-      --text-tertiary: rgba(255,255,255,0.30);
-      --accent: #6b7db3;
-      --accent-hover: #7d8fc4;
-      --accent-soft: rgba(107,125,179,0.12);
-      --accent-border: rgba(107,125,179,0.25);
-      --login-bg: linear-gradient(135deg, #08080c 0%, #0d0f14 50%, #090b10 100%);
-      --login-card-bg: rgba(255,255,255,0.015);
-      --login-glow-1: rgba(107,125,179,0.06);
-      --login-glow-2: rgba(130,150,200,0.03);
-      --toggle-bg: rgba(255,255,255,0.06);
-      --toggle-border: rgba(255,255,255,0.08);
-      --scrollbar-thumb: rgba(255,255,255,0.08);
-      --scrollbar-thumb-hover: rgba(255,255,255,0.14);
-    }
-
-    [data-theme="light"] {
-      --bg-root: #f5f6f9;
-      --bg-surface: rgba(0,0,0,0.015);
-      --bg-surface-hover: rgba(0,0,0,0.04);
-      --bg-elevated: rgba(0,0,0,0.03);
-      --bg-input: rgba(0,0,0,0.03);
-      --border-subtle: rgba(0,0,0,0.06);
-      --border-default: rgba(0,0,0,0.10);
-      --border-focus: rgba(74,90,138,0.30);
-      --text-primary: rgba(0,0,0,0.88);
-      --text-secondary: rgba(0,0,0,0.50);
-      --text-tertiary: rgba(0,0,0,0.35);
-      --accent: #4a5a8a;
-      --accent-hover: #5e6e9a;
-      --accent-soft: rgba(74,90,138,0.08);
-      --accent-border: rgba(74,90,138,0.20);
-      --login-bg: linear-gradient(135deg, #f5f6f9 0%, #eef0f5 50%, #f8f9fb 100%);
-      --login-card-bg: rgba(255,255,255,0.60);
-      --login-glow-1: rgba(74,90,138,0.04);
-      --login-glow-2: rgba(100,120,160,0.02);
-      --toggle-bg: rgba(0,0,0,0.04);
-      --toggle-border: rgba(0,0,0,0.08);
-      --scrollbar-thumb: rgba(0,0,0,0.10);
-      --scrollbar-thumb-hover: rgba(0,0,0,0.18);
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
-      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    :root {
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
-      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html, body {
-      font-family: var(--font-sans);
-      background: var(--bg-root);
-      color: var(--text-primary);
-      font-weight: 300;
-      letter-spacing: 0.01em;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    /* ═══════════ CUSTOM LOGIN SCREEN ═══════════ */
-    .login-container {
-      display: none;
-      position: fixed; inset: 0; z-index: 9999;
-      align-items: center; justify-content: center;
-      background: var(--login-bg);
-    }
-
-    .login-container::before {
-      content: '';
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% 35%, var(--login-glow-1) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 50% at 80% 70%, var(--login-glow-2) 0%, transparent 60%);
-    }
-
-    .login-card {
-      position: relative;
-      width: 380px;
-      max-width: 90vw;
-      padding: 48px 40px 40px;
-      background: var(--login-card-bg);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-lg);
-      backdrop-filter: blur(20px);
-      text-align: center;
-      animation: loginFadeIn 0.6s ease-out;
-    }
-
-    @keyframes loginFadeIn {
-      from { opacity: 0; transform: translateY(12px) scale(0.98); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .login-logo {
-      font-size: 1.8rem;
-      font-weight: 200;
-      letter-spacing: 0.06em;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-
-    .login-subtitle {
-      font-size: 0.8rem;
-      color: var(--text-tertiary);
-      font-weight: 300;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 36px;
-    }
-
-    .login-btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%;
-      padding: 14px 0;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-md);
-      color: var(--text-primary);
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
-      font-weight: 400;
-      letter-spacing: 0.03em;
-      cursor: pointer;
-      transition: all var(--transition);
-    }
-
-    .login-btn:hover {
-      background: rgba(255,255,255,0.10);
-      border-color: var(--border-focus);
-      transform: translateY(-1px);
-    }
-
-    .login-btn:active { transform: translateY(0); }
-
-    .login-spinner {
-      width: 28px; height: 28px;
-      margin: 0 auto 20px;
-      border: 2px solid var(--border-default);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .login-loading-text {
-      font-size: 0.75rem;
-      color: var(--text-tertiary);
-      font-weight: 300;
-      margin-bottom: 4px;
-    }
-
-    .login-error {
-      color: #e0556a;
-      font-size: 0.78rem;
-      font-weight: 400;
-      margin-bottom: 16px;
-      min-height: 20px;
-      transition: opacity 0.2s;
-    }
-
-    .login-input-group {
-      margin-bottom: 16px;
-      text-align: left;
-    }
-
-    .login-input-group label {
-      display: block;
-      font-size: 0.7rem;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 6px;
-      font-weight: 400;
-    }
-
-    .login-input-group input {
-      width: 100%;
-      padding: 10px 14px;
-      background: var(--bg-input);
-      border: 1px solid var(--border-default);
-      border-radius: var(--radius-sm);
-      color: var(--text-primary);
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
-      font-weight: 300;
-      transition: border-color var(--transition), box-shadow var(--transition);
-      outline: none;
-    }
-
-    .login-input-group input:focus {
-      border-color: var(--border-focus);
-      box-shadow: 0 0 0 3px var(--accent-soft);
-    }
-
-    .login-welcome {
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      font-weight: 300;
-      margin-bottom: 28px;
-      line-height: 1.6;
-    }
-
-    .login-divider {
-      height: 1px;
-      background: var(--border-subtle);
-      margin: 28px 0;
-      position: relative;
-    }
-
-    .login-return {
-      display: block;
-      color: var(--text-tertiary);
-      font-size: 0.78rem;
-      text-decoration: none;
-      transition: color var(--transition);
-    }
-
-    .login-return:hover { color: var(--text-secondary); }
-
-    /* ═══════════ DECAP CMS OVERRIDES ═══════════ */
-
-    /* --- Root & Background --- */
-    #nc-root {
-      background: var(--bg-root) !important;
-      font-family: var(--font-sans) !important;
-      min-height: 100vh;
-    }
-
-    /* --- Login Page Overrides --- */
-    #nc-root section {
-      background: transparent !important;
-    }
-
-    #nc-root button[type="submit"],
-    #nc-root form button,
-    #nc-root button[class*="LoginButton"],
-    #nc-root button[class*="GitHubButton"] {
-      background: rgba(255,255,255,0.06) !important;
-      border: 1px solid var(--border-default) !important;
-      border-radius: var(--radius-md) !important;
-      color: var(--text-primary) !important;
-      font-family: var(--font-sans) !important;
-      font-weight: 400 !important;
-      letter-spacing: 0.03em !important;
-      padding: 12px 24px !important;
-      transition: all var(--transition) !important;
-      cursor: pointer;
-    }
-
-    #nc-root form button:hover {
-      background: rgba(255,255,255,0.10) !important;
-      border-color: var(--border-focus) !important;
-    }
-
-    #nc-root input[type="text"],
-    #nc-root input[type="email"],
-    #nc-root input[type="password"],
-    #nc-root input[type="search"],
-    #nc-root input:not([type="checkbox"]):not([type="radio"]):not([type="file"]) {
-      background: var(--bg-input) !important;
-      border: 1px solid var(--border-default) !important;
-      border-radius: var(--radius-sm) !important;
-      color: var(--text-primary) !important;
-      font-family: var(--font-sans) !important;
-      font-weight: 300 !important;
-      font-size: 0.9rem !important;
-      padding: 10px 14px !important;
-      transition: border-color var(--transition) !important;
-    }
-
-    #nc-root input:focus {
-      border-color: var(--border-focus) !important;
-      outline: none !important;
-      box-shadow: 0 0 0 3px var(--accent-soft) !important;
-    }
-
-    /* --- Sidebar --- */
-    #nc-root aside,
-    #nc-root nav[class*="Sidebar"],
-    div[class*="Sidebar"] {
-      background: rgba(255,255,255,0.008) !important;
-      border-right: 1px solid var(--border-subtle) !important;
-    }
-
-    #nc-root aside a,
-    #nc-root aside button,
-    #nc-root nav a,
-    nav[class*="Sidebar"] a {
-      color: var(--text-secondary) !important;
-      font-family: var(--font-sans) !important;
-      font-weight: 300 !important;
-      font-size: 0.85rem !important;
-      transition: all var(--transition) !important;
-      border-radius: var(--radius-sm) !important;
-    }
-
-    #nc-root aside a:hover,
-    #nc-root aside a.active,
-    #nc-root aside a[aria-current],
-    nav a[class*="active"] {
-      color: var(--text-primary) !important;
-      background: var(--bg-surface-hover) !important;
-    }
-
-    /* --- Top Bar --- */
-    #nc-root header,
-    #nc-root div[class*="AppHeader"],
-    div[class*="EditorToolbar"] {
-      background: var(--bg-root) !important;
-      border-bottom: 1px solid var(--border-subtle) !important;
-    }
-
-    #nc-root header button,
-    #nc-root header a,
-    div[class*="AppHeader"] button {
-      color: var(--text-secondary) !important;
-      font-family: var(--font-sans) !important;
-      transition: color var(--transition) !important;
-    }
-
-    #nc-root header button:hover,
-    #nc-root header a:hover {
-      color: var(--text-primary) !important;
-    }
-
-    /* --- Cards (Collection Items) --- */
-    #nc-root main a,
-    #nc-root main div[class*="Card"],
-    div[class*="EntryCard"] a,
-    div[class*="EntryCard"] {
-      background: var(--bg-surface) !important;
-      border: 1px solid var(--border-subtle) !important;
-      border-radius: var(--radius-md) !important;
-      transition: all var(--transition) !important;
-      color: var(--text-primary) !important;
-      font-family: var(--font-sans) !important;
-    }
-
-    #nc-root main a:hover,
-    div[class*="EntryCard"]:hover {
-      background: var(--bg-surface-hover) !important;
-      border-color: var(--border-default) !important;
-      transform: translateY(-1px);
-    }
-
-    /* --- Buttons (general) --- */
-    #nc-root button:not([class*="Toolbar"]):not([class*="CloseButton"]) {
-      background: rgba(255,255,255,0.05) !important;
-      border: 1px solid var(--border-default) !important;
-      border-radius: var(--radius-sm) !important;
-      color: var(--text-secondary) !important;
-      font-family: var(--font-sans) !important;
-      font-weight: 400 !important;
-      font-size: 0.82rem !important;
-      transition: all var(--transition) !important;
-      cursor: pointer;
-    }
-
-    #nc-root button:hover:not([disabled]) {
-      background: rgba(255,255,255,0.08) !important;
-      color: var(--text-primary) !important;
-      border-color: var(--border-focus) !important;
-    }
-
-    /* --- Editor Area --- */
-    #nc-root textarea,
-    #nc-root [contenteditable="true"],
-    div[class*="EditorControl"] textarea,
-    div[class*="Markdown"] textarea {
-      background: var(--bg-surface) !important;
-      border: 1px solid var(--border-default) !important;
-      border-radius: var(--radius-sm) !important;
-      color: var(--text-primary) !important;
-      font-family: var(--font-mono) !important;
-      font-weight: 300 !important;
-      font-size: 0.9rem !important;
-      line-height: 1.7 !important;
-      padding: 16px !important;
-    }
-
-    #nc-root textarea:focus,
-    #nc-root [contenteditable="true"]:focus {
-      border-color: var(--border-focus) !important;
-      outline: none !important;
-      box-shadow: 0 0 0 3px var(--accent-soft) !important;
-    }
-
-    /* --- Select / Dropdown --- */
-    #nc-root select,
-    #nc-root div[class*="Select"] select {
-      background: var(--bg-input) !important;
-      border: 1px solid var(--border-default) !important;
-      border-radius: var(--radius-sm) !important;
-      color: var(--text-primary) !important;
-      font-family: var(--font-sans) !important;
-      font-weight: 300 !important;
-      padding: 8px 12px !important;
-    }
-
-    /* --- Labels --- */
-    #nc-root label {
-      color: var(--text-secondary) !important;
-      font-family: var(--font-sans) !important;
-      font-weight: 400 !important;
-      font-size: 0.82rem !important;
-      letter-spacing: 0.04em !important;
-      text-transform: uppercase !important;
-      margin-bottom: 6px !important;
-      display: block;
-    }
-
-    /* --- Modal --- */
-    div[class*="Modal"] > div,
-    div[class*="Dialog"] > div {
-      background: rgba(12,12,18,0.98) !important;
-      border: 1px solid var(--border-default) !important;
-      border-radius: var(--radius-lg) !important;
-      backdrop-filter: blur(20px);
-    }
-
-    /* --- Status / Badges --- */
-    span[class*="Badge"],
-    span[class*="Status"] {
-      border-radius: 20px !important;
-      font-family: var(--font-sans) !important;
-      font-weight: 400 !important;
-      font-size: 0.7rem !important;
-      letter-spacing: 0.05em !important;
-      text-transform: uppercase;
-      padding: 2px 10px !important;
-    }
-
-    /* --- Scrollbar --- */
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
-
-    /* --- Toast / Notifications --- */
-    div[class*="Toast"] {
-      background: rgba(14,14,22,0.96) !important;
-      border: 1px solid var(--border-default) !important;
-      border-radius: var(--radius-md) !important;
-      color: var(--text-primary) !important;
-      font-family: var(--font-sans) !important;
-      backdrop-filter: blur(12px);
-    }
-
-    /* --- Spinner Override --- */
-    #nc-root [class*="spinner"],
-    svg[class*="Spinner"] {
-      color: var(--accent) !important;
-    }
-
-    /* --- Top bar collection name --- */
-    #nc-root h2,
-    #nc-root h3 {
-      font-family: var(--font-sans) !important;
-      font-weight: 300 !important;
-      letter-spacing: 0.02em !important;
-      color: var(--text-primary) !important;
-    }
-
-    /* --- "New Entry" etc --- */
-    #nc-root a[class*="AddButton"] {
-      background: var(--accent-soft) !important;
-      border-color: rgba(107,125,179,0.25) !important;
-      color: var(--accent) !important;
-      font-weight: 400 !important;
-    }
-
-    #nc-root a[class*="AddButton"]:hover {
-      background: rgba(107,125,179,0.18) !important;
-      border-color: var(--accent) !important;
-      color: var(--accent-hover) !important;
-    }
-
-    /* --- Widget: List items --- */
-    div[class*="ListControl"] > div,
-    div[class*="ObjectWidget"] > div {
-      border: 1px solid var(--border-subtle) !important;
-      border-radius: var(--radius-md) !important;
-      background: var(--bg-surface) !important;
-      padding: 12px !important;
-      margin-bottom: 8px !important;
-    }
-
-    /* --- Image widget placeholder --- */
-    div[class*="ImageControl"] > div {
-      border: 1px dashed var(--border-default) !important;
-      border-radius: var(--radius-md) !important;
-      background: var(--bg-surface) !important;
-    }
-
-    /* --- Publish button area --- */
-    #nc-root button[class*="PublishButton"],
-    #nc-root button[class*="SaveButton"] {
-      background: var(--accent-soft) !important;
-      border-color: rgba(107,125,179,0.30) !important;
-      color: var(--accent) !important;
-      font-weight: 500 !important;
-    }
-
-    #nc-root button[class*="PublishButton"]:hover,
-    #nc-root button[class*="SaveButton"]:hover {
-      background: rgba(107,125,179,0.18) !important;
-      border-color: var(--accent) !important;
-      color: var(--accent-hover) !important;
-    }
-
-    /* ═══════════ THEME TOGGLE ═══════════ */
-    .theme-toggle {
-      position: fixed;
-      top: 16px; right: 16px;
-      z-index: 10000;
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      background: var(--toggle-bg);
-      border: 1px solid var(--toggle-border);
-      color: var(--text-secondary);
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      outline: none;
-    }
-
-    .theme-toggle:hover {
-      color: var(--text-primary);
-      border-color: var(--border-focus);
-      transform: scale(1.08);
-    }
-
-    .theme-toggle svg {
-      width: 18px; height: 18px;
-      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .theme-toggle svg.sun   { display: block; }
-    .theme-toggle svg.moon  { display: none; }
-    [data-theme="light"] .theme-toggle svg.sun  { display: none; }
-    [data-theme="light"] .theme-toggle svg.moon { display: block; }
-
-    .theme-toggle.rotating svg {
-      transform: rotate(180deg);
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Content — LuvChippy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a10;--card-bg:rgba(255,255,255,0.02);--card-border:rgba(255,255,255,0.06);--accent:#6b7db3;--accent-soft:rgba(107,125,179,0.15);--text:rgba(255,255,255,0.87);--text-secondary:rgba(255,255,255,0.55);--text-dim:rgba(255,255,255,0.3);--success:#4ade80;--error:#f87171;--radius:12px;--radius-sm:8px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,sans-serif;font-weight:300;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -20%,rgba(107,125,179,0.06),transparent);pointer-events:none;z-index:0}
+
+/* ── Login Overlay ── */
+.login-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+.login-card{width:360px;max-width:90vw;padding:44px 36px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius);backdrop-filter:blur(20px);text-align:center}
+.login-card h2{font-weight:200;font-size:1.5rem;letter-spacing:.04em;margin-bottom:28px}
+.login-card input{width:100%;padding:11px 14px;margin-bottom:14px;background:rgba(255,255,255,0.04);border:1px solid var(--card-border);border-radius:var(--radius-sm);color:var(--text);font-family:inherit;font-size:.9rem;outline:none;transition:border-color .25s}
+.login-card input:focus{border-color:var(--accent)}
+.login-card button{width:100%;padding:11px;background:var(--accent);border:none;border-radius:var(--radius-sm);color:#fff;font-family:inherit;font-size:.9rem;cursor:pointer;transition:background .25s}
+.login-card button:hover{background:#7a8cc4}
+.login-card button:disabled{opacity:.5;cursor:default}
+.login-error{color:var(--error);font-size:.78rem;margin-bottom:12px;min-height:20px}
+.login-back{display:block;margin-top:20px;color:var(--text-dim);text-decoration:none;font-size:.78rem;transition:color .2s}
+.login-back:hover{color:var(--text-secondary)}
+
+/* ── Editor ── */
+.editor{display:none;max-width:800px;margin:0 auto;padding:40px 24px;position:relative;z-index:1}
+.editor.active{display:block}
+.editor-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--card-border)}
+.editor-header h1{font-weight:200;font-size:1.5rem;letter-spacing:.04em;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.editor-nav{display:flex;gap:12px}
+.editor-nav a{color:var(--text-secondary);text-decoration:none;font-size:.82rem;transition:color .2s}
+.editor-nav a:hover{color:var(--accent)}
+.editor-nav .logout{color:var(--text-dim)}
+.editor-nav .logout:hover{color:var(--error)}
+
+.msg{display:none;padding:10px 16px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:.85rem}
+.msg.success{display:block;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);color:var(--success)}
+.msg.error{display:block;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);color:var(--error)}
+
+.field{margin-bottom:20px}
+.field label{display:block;font-size:.72rem;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.field input,.field textarea{width:100%;padding:11px 14px;background:rgba(255,255,255,0.03);border:1px solid var(--card-border);border-radius:var(--radius-sm);color:var(--text);font-family:inherit;font-size:.88rem;outline:none;transition:border-color .25s;resize:vertical}
+.field input:focus,.field textarea:focus{border-color:var(--accent)}
+.field textarea{min-height:360px;line-height:1.7;font-family:monospace;font-size:.82rem}
+.field .hint{font-size:.7rem;color:var(--text-dim);margin-top:6px}
+
+.btn-row{display:flex;gap:10px;margin-top:8px}
+.btn{padding:10px 24px;border:1px solid var(--card-border);border-radius:var(--radius-sm);background:var(--card-bg);color:var(--text);font-family:inherit;font-size:.85rem;cursor:pointer;transition:all .25s}
+.btn:hover{background:var(--accent-soft);border-color:var(--accent)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{background:#7a8cc4}
+.btn:disabled{opacity:.5;cursor:default}
+
+/* ── Article List ── */
+.articles-section{margin-top:48px;padding-top:24px;border-top:1px solid var(--card-border)}
+.articles-section h3{font-weight:300;font-size:1rem;color:var(--text-secondary);margin-bottom:16px}
+.article-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:var(--radius-sm);transition:background .2s;margin-bottom:4px}
+.article-row:hover{background:rgba(255,255,255,0.03)}
+.article-row .title{font-size:.88rem;color:var(--text)}
+.article-row .date{font-size:.72rem;color:var(--text-dim)}
+.article-row button{background:none;border:1px solid var(--card-border);border-radius:var(--radius-sm);color:var(--text-dim);font-size:.7rem;padding:4px 10px;cursor:pointer;transition:all .2s;font-family:inherit}
+.article-row button:hover{border-color:var(--error);color:var(--error)}
+
+@media(max-width:500px){.editor{padding:24px 16px}.editor-header{flex-direction:column;align-items:flex-start;gap:12px}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+</style>
 </head>
 <body>
-  <!-- Theme Toggle (outside CMS root, persists across states) -->
-  <button class="theme-toggle" id="theme-toggle" title="Switch theme" aria-label="Switch theme">
-    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-      <circle cx="12" cy="12" r="5"/>
-      <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-      <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-    </svg>
-    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-    </svg>
-  </button>
 
-  <!-- Custom Login Screen (gate before Decap CMS) -->
-  <div id="custom-login" class="login-container">
-    <div class="login-card" id="login-card">
-      <div class="login-logo">LuvChippy</div>
-      <div class="login-subtitle">Content Manager</div>
+<!-- Login Overlay -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <h2>管理后台</h2>
+    <div class="login-error" id="loginError"></div>
+    <input type="text" id="loginUser" placeholder="用户名" autocomplete="username">
+    <input type="password" id="loginPass" placeholder="密码" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button id="loginBtn" onclick="doLogin()">登 录</button>
+    <a href="/" class="login-back">← 返回首页</a>
+  </div>
+</div>
 
-      <!-- Loading state (shown during auth check) -->
-      <div id="login-loading">
-        <div class="login-spinner"></div>
-        <div class="login-loading-text">Loading editor...</div>
-      </div>
-
-      <!-- Login form (shown when not authenticated) -->
-      <div id="login-form" style="display:none;">
-        <div class="login-welcome">请登录以管理文章内容。</div>
-        <div class="login-error" id="login-error"></div>
-        <div class="login-input-group">
-          <label for="login-username">用户名</label>
-          <input type="text" id="login-username" placeholder="admin" autocomplete="username" />
-        </div>
-        <div class="login-input-group">
-          <label for="login-password">密码</label>
-          <input type="password" id="login-password" placeholder="········" autocomplete="current-password" />
-        </div>
-        <button class="login-btn" id="login-submit" type="button">登 录</button>
-        <div class="login-divider"></div>
-        <a href="/" class="login-return">← Back to Homepage</a>
-      </div>
+<!-- Editor -->
+<div class="editor" id="editor">
+  <div class="editor-header">
+    <h1>✍️ 撰写文章</h1>
+    <div class="editor-nav">
+      <a href="/" target="_blank">预览博客</a>
+      <a href="#" class="logout" onclick="doLogout()">退出</a>
     </div>
   </div>
 
-  <!-- Decap CMS SPA -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <div class="msg" id="msg"></div>
 
-  <script>
-    // ─── Preview Styles (matches VitePress reading experience) ───
-    CMS.registerPreviewStyle('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap');
+  <div class="field"><label>文章标识 (slug)</label><input type="text" id="slug" placeholder="my-new-post"><span class="hint">英文/数字/连字符，用于 URL：/articles/my-new-post</span></div>
+  <div class="field"><label>标题</label><input type="text" id="title" placeholder="文章标题"></div>
+  <div class="field"><label>标签 (逗号分隔)</label><input type="text" id="tags" placeholder="技术, 生活"></div>
+  <div class="field"><label>正文 (Markdown)</label><textarea id="content" placeholder="开始写作..."></textarea></div>
 
-    CMS.registerPreviewStyle(null, { raw: true, value: `
-      .nc-previewPane-frame body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        font-weight: 300;
-        color: rgba(0,0,0,0.88);
-        line-height: 1.8;
-        font-size: 16px;
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 40px 24px 80px;
-      }
-      .nc-previewPane-frame h1 {
-        font-size: 2rem;
-        font-weight: 600;
-        letter-spacing: -0.02em;
-        margin: 0 0 8px 0;
-        color: #111;
-      }
-      .nc-previewPane-frame h2 {
-        font-size: 1.4rem;
-        font-weight: 500;
-        margin: 36px 0 12px;
-        color: #222;
-        padding-bottom: 6px;
-        border-bottom: 1px solid rgba(0,0,0,0.08);
-      }
-      .nc-previewPane-frame h3 {
-        font-size: 1.15rem;
-        font-weight: 500;
-        margin: 24px 0 8px;
-        color: #333;
-      }
-      .nc-previewPane-frame p {
-        margin: 0 0 16px;
-      }
-      .nc-previewPane-frame blockquote {
-        margin: 16px 0;
-        padding: 12px 20px;
-        border-left: 3px solid #6b7db3;
-        background: rgba(107,125,179,0.05);
-        border-radius: 0 6px 6px 0;
-        color: #555;
-        font-style: italic;
-      }
-      .nc-previewPane-frame code {
-        font-family: 'JetBrains Mono', 'SF Mono', monospace;
-        font-size: 0.88em;
-        background: rgba(0,0,0,0.06);
-        padding: 2px 6px;
-        border-radius: 4px;
-      }
-      .nc-previewPane-frame pre {
-        background: #f5f5f5;
-        padding: 20px;
-        border-radius: 8px;
-        overflow-x: auto;
-        margin: 16px 0;
-        border: 1px solid rgba(0,0,0,0.06);
-      }
-      .nc-previewPane-frame pre code {
-        background: none;
-        padding: 0;
-        font-size: 0.85em;
-      }
-      .nc-previewPane-frame img {
-        max-width: 100%;
-        border-radius: 8px;
-        margin: 16px 0;
-      }
-      .nc-previewPane-frame ul, .nc-previewPane-frame ol {
-        padding-left: 24px;
-        margin: 0 0 16px;
-      }
-      .nc-previewPane-frame li {
-        margin-bottom: 6px;
-      }
-      .nc-previewPane-frame a {
-        color: #6b7db3;
-        text-decoration: none;
-      }
-      .nc-previewPane-frame a:hover {
-        text-decoration: underline;
-      }
-      .nc-previewPane-frame hr {
-        border: none;
-        border-top: 1px solid rgba(0,0,0,0.08);
-        margin: 32px 0;
-      }
-      .nc-previewPane-frame table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 16px 0;
-      }
-      .nc-previewPane-frame th, .nc-previewPane-frame td {
-        border: 1px solid rgba(0,0,0,0.1);
-        padding: 10px 14px;
-        text-align: left;
-      }
-      .nc-previewPane-frame th {
-        background: rgba(0,0,0,0.03);
-        font-weight: 500;
-      }
-    `});
+  <div class="btn-row">
+    <button class="btn btn-primary" id="publishBtn" onclick="publishArticle()">发布文章</button>
+    <button class="btn" onclick="resetForm()">清空</button>
+  </div>
 
-    // ─── Login Gate (password wall before Decap CMS) ───
-    (function() {
-      var loginEl = document.getElementById('custom-login');
-      var loginFormEl = document.getElementById('login-form');
-      var loginLoadingEl = document.getElementById('login-loading');
-      var loginErrorEl = document.getElementById('login-error');
-      var usernameInput = document.getElementById('login-username');
-      var passwordInput = document.getElementById('login-password');
-      var submitBtn = document.getElementById('login-submit');
-      var hidden = false;
+  <!-- Existing articles -->
+  <div class="articles-section">
+    <h3>已发布文章</h3>
+    <div id="articleList"></div>
+  </div>
+</div>
 
-      function hideLogin() {
-        if (hidden) return;
-        hidden = true;
-        loginEl.style.opacity = '0';
-        loginEl.style.transition = 'opacity 0.35s ease';
-        setTimeout(function() { loginEl.style.display = 'none'; }, 400);
-      }
+<script>
+const API = '/api/articles';
+let token = null;
 
-      function showError(msg) {
-        loginErrorEl.textContent = msg;
-        submitBtn.disabled = false;
-        submitBtn.textContent = '登 录';
-        submitBtn.style.opacity = '1';
-      }
+// ── Auth ──
+function isLoggedIn() {
+  try {
+    const t = localStorage.getItem('luvchippy-admin-token');
+    if (!t) return false;
+    const payload = JSON.parse(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+    return payload.exp > Date.now()/1000;
+  } catch(e) { return false; }
+}
 
-      function setLoading(isLoading) {
-        submitBtn.disabled = isLoading;
-        submitBtn.textContent = isLoading ? '登录中...' : '登 录';
-        submitBtn.style.opacity = isLoading ? '0.6' : '1';
-      }
+function showEditor() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('editor').classList.add('active');
+  token = localStorage.getItem('luvchippy-admin-token');
+  loadArticles();
+}
 
-      // Check if already authenticated via JWT
-      function isAuthenticated() {
-        try {
-          var token = localStorage.getItem('luvchippy-admin-token');
-          if (!token) return false;
-          // Check expiry client-side (JWT payload is base64url)
-          var parts = token.split('.');
-          if (parts.length !== 3) return false;
-          var payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
-          if (payload.exp && Date.now() / 1000 > payload.exp) {
-            localStorage.removeItem('luvchippy-admin-token');
-            return false;
-          }
-          return true;
-        } catch(e) {
-          return false;
-        }
-      }
+async function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginError');
 
-      // Show login screen immediately
-      loginEl.style.display = 'flex';
+  if (!u || !p) { err.textContent = '请输入用户名和密码'; return; }
+  btn.disabled = true; btn.textContent = '登录中...'; err.textContent = '';
 
-      if (isAuthenticated()) {
-        // Already logged in — quickly hide overlay and load CMS
-        setTimeout(hideLogin, 400);
-      } else {
-        // Show login form after a brief moment
-        setTimeout(function() {
-          loginLoadingEl.style.display = 'none';
-          loginFormEl.style.display = 'block';
-          usernameInput.focus();
-        }, 300);
-      }
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username: u, password: p})
+    });
+    const data = await res.json();
+    if (res.ok && data.token) {
+      localStorage.setItem('luvchippy-admin-token', data.token);
+      showEditor();
+    } else {
+      err.textContent = data.error || '登录失败';
+      document.getElementById('loginPass').value = '';
+    }
+  } catch(e) {
+    err.textContent = '网络错误，请重试';
+  }
+  btn.disabled = false; btn.textContent = '登 录';
+}
 
-      // Handle form submission
-      submitBtn.addEventListener('click', function() {
-        var username = usernameInput.value.trim();
-        var password = passwordInput.value;
+function doLogout() {
+  localStorage.removeItem('luvchippy-admin-token');
+  location.reload();
+}
 
-        if (!username || !password) {
-          showError('请输入用户名和密码');
-          return;
-        }
+// ── Articles ──
+async function publishArticle() {
+  const slug = document.getElementById('slug').value.trim();
+  const title = document.getElementById('title').value.trim();
+  const tagsRaw = document.getElementById('tags').value.trim();
+  const content = document.getElementById('content').value.trim();
+  const msg = document.getElementById('msg');
 
-        setLoading(true);
-        loginErrorEl.textContent = '';
+  if (!slug || !content) { showMsg('请填写标识和正文', 'error'); return; }
 
-        fetch('/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: username, password: password })
-        })
-        .then(function(res) { return res.json().then(function(data) { return { status: res.status, data: data }; }); })
-        .then(function(result) {
-          if (result.status === 200 && result.data.token) {
-            localStorage.setItem('luvchippy-admin-token', result.data.token);
-            hideLogin();
-          } else {
-            showError(result.data.error || '登录失败，请重试');
-            passwordInput.value = '';
-            passwordInput.focus();
-          }
-        })
-        .catch(function(err) {
-          showError('网络错误，请检查连接后重试');
-          setLoading(false);
-        });
-      });
+  const today = new Date().toISOString().slice(0,10);
+  const tags = tagsRaw ? tagsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
 
-      // Submit on Enter key
-      passwordInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') submitBtn.click();
-      });
-    })();
+  const btn = document.getElementById('publishBtn');
+  btn.disabled = true; btn.textContent = '提交中...';
 
-    // ─── Theme Switcher ───
-    (function() {
-      var STORAGE_KEY = 'luvchippy-admin-theme';
-      var toggle  = document.getElementById('theme-toggle');
-      var html    = document.documentElement;
+  try {
+    const res = await fetch('/api/articles', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ slug, title: title || slug, content, tags, date: today })
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      showMsg('✅ 文章已发布！Cloudflare Pages 将自动部署，约 1-2 分钟生效。', 'success');
+      resetForm();
+      loadArticles();
+    } else {
+      showMsg('❌ ' + (data.error || '发布失败'), 'error');
+    }
+  } catch(e) {
+    showMsg('❌ 网络错误', 'error');
+  }
+  btn.disabled = false; btn.textContent = '发布文章';
+}
 
-      // Determine initial theme: stored pref → system → dark fallback
-      function getTheme() {
-        var stored = localStorage.getItem(STORAGE_KEY);
-        if (stored === 'light' || stored === 'dark') return stored;
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
-        return 'dark';
-      }
+function resetForm() {
+  document.getElementById('slug').value = '';
+  document.getElementById('title').value = '';
+  document.getElementById('tags').value = '';
+  document.getElementById('content').value = '';
+}
 
-      function applyTheme(theme, animate) {
-        html.setAttribute('data-theme', theme);
-        localStorage.setItem(STORAGE_KEY, theme);
-        if (animate) {
-          toggle.classList.add('rotating');
-          setTimeout(function() { toggle.classList.remove('rotating'); }, 500);
-        }
-      }
+function showMsg(text, type) {
+  const m = document.getElementById('msg');
+  m.textContent = text; m.className = 'msg ' + type;
+  setTimeout(() => { m.className = 'msg'; }, 8000);
+}
 
-      // Init
-      applyTheme(getTheme(), false);
+async function loadArticles() {
+  // Fetch articles list from git tree
+  try {
+    const input = document.getElementById('slug');
+    const list = document.getElementById('articleList');
+    list.innerHTML = '<div style="color:var(--text-dim);font-size:.8rem">加载中...</div>';
 
-      // Toggle on click
-      toggle.addEventListener('click', function() {
-        var current = html.getAttribute('data-theme');
-        applyTheme(current === 'dark' ? 'light' : 'dark', true);
-      });
+    const res = await fetch('https://api.github.com/repos/luvchippy/article/contents/docs/articles?ref=main');
+    if (!res.ok) { list.innerHTML = ''; return; }
+    const files = await res.json();
+    if (!Array.isArray(files)) { list.innerHTML = ''; return; }
 
-      // Listen for system preference changes
-      if (window.matchMedia) {
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-          // Only auto-switch if user hasn't manually chosen
-          if (!localStorage.getItem(STORAGE_KEY)) {
-            applyTheme(e.matches ? 'dark' : 'light', false);
-          }
-        });
-      }
-    })();
-  </script>
+    const mdFiles = files.filter(f => f.name.endsWith('.md'));
+    list.innerHTML = mdFiles.map(f => {
+      const name = f.name.replace('.md','');
+      return `<div class="article-row">
+        <span class="title">${name}</span>
+        <div style="display:flex;gap:10px;align-items:center">
+          <span class="date" style="display:none"></span>
+          <button onclick="loadArticle('${name}')">编辑</button>
+          <button onclick="deleteArticle('${name}')">删除</button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { document.getElementById('articleList').innerHTML = ''; }
+}
+
+async function loadArticle(slug) {
+  try {
+    const res = await fetch(`https://raw.githubusercontent.com/luvchippy/article/main/docs/articles/${slug}.md`);
+    if (!res.ok) return;
+    const raw = await res.text();
+
+    // Parse frontmatter
+    const match = raw.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    if (match) {
+      const fm = match[1];
+      const body = match[2];
+      const titleMatch = fm.match(/title:\s*"?(.+?)"?\n/);
+      const tagsMatch = fm.match(/tags:\s*\[(.+?)\]/);
+      document.getElementById('slug').value = slug;
+      document.getElementById('title').value = titleMatch ? titleMatch[1] : '';
+      document.getElementById('tags').value = tagsMatch ? tagsMatch[1].replace(/"/g,'') : '';
+      document.getElementById('content').value = body.trim();
+    } else {
+      document.getElementById('slug').value = slug;
+      document.getElementById('content').value = raw;
+    }
+    window.scrollTo({top:0, behavior:'smooth'});
+  } catch(e) {}
+}
+
+async function deleteArticle(slug) {
+  if (!confirm(`确定删除「${slug}」？此操作不可撤销。`)) return;
+  try {
+    const res = await fetch('/api/articles', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ slug, action: 'delete' })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showMsg('✅ 已删除', 'success');
+      loadArticles();
+    } else {
+      showMsg('❌ ' + (data.error || '删除失败'), 'error');
+    }
+  } catch(e) { showMsg('❌ 网络错误', 'error'); }
+}
+
+// ── Init ──
+if (isLoggedIn()) showEditor();
+</script>
 </body>
 </html>

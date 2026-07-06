@@ -243,5 +243,73 @@ export async function onRequest(context) {
     return handleArticles(request, env);
   }
 
+  // Route: DELETE /api/articles
+  if (url.pathname.endsWith("/api/articles") && method === "DELETE") {
+    return handleDeleteArticle(request, env);
+  }
+
   return jsonResponse({ error: "Not Found" }, 404);
+}
+
+// ── DELETE /api/articles ────────────────────────────────────
+
+async function handleDeleteArticle(request, env) {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return jsonResponse({ error: "未授权" }, 401);
+  }
+  const token = authHeader.slice(7);
+  const secret = env.JWT_SECRET || "luvchippy-secret-key-change-me";
+  const payload = await verifyToken(token, secret);
+  if (!payload) {
+    return jsonResponse({ error: "登录已过期" }, 401);
+  }
+
+  let body;
+  try { body = await request.json(); } catch { return jsonResponse({ error: "Invalid JSON" }, 400); }
+
+  const { slug } = body;
+  if (!slug) return jsonResponse({ error: "缺少 slug" }, 400);
+
+  const ghToken = env.GITHUB_TOKEN;
+  if (!ghToken) return jsonResponse({ error: "未配置 GITHUB_TOKEN" }, 500);
+  const owner = env.GITHUB_OWNER || "luvchippy";
+  const repo = env.GITHUB_REPO || "article";
+  const branch = env.GITHUB_BRANCH || "main";
+
+  const filePath = `docs/articles/${slug}.md`;
+  const ghUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+  const ghHeaders = {
+    Authorization: `token ${ghToken}`,
+    "Content-Type": "application/json",
+    Accept: "application/vnd.github.v3+json",
+    "User-Agent": "luvchippy-article-cms",
+  };
+
+  try {
+    const existingResp = await fetch(`${ghUrl}?ref=${branch}`, { headers: ghHeaders });
+    if (!existingResp.ok) {
+      return jsonResponse({ error: "文章不存在" }, 404);
+    }
+    const existing = await existingResp.json();
+
+    const resp = await fetch(ghUrl, {
+      method: "DELETE",
+      headers: ghHeaders,
+      body: JSON.stringify({
+        message: `Delete: ${slug}`,
+        sha: existing.sha,
+        branch,
+      }),
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      return jsonResponse({ error: `删除失败: ${err.message || resp.statusText}` }, resp.status);
+    }
+
+    return jsonResponse({ success: true, action: "deleted" });
+  } catch (err) {
+    return jsonResponse({ error: `请求失败: ${err.message}` }, 500);
+  }
 }
