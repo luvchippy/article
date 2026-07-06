@@ -13,7 +13,7 @@
         <p class="hero-sub">记录技术、思考与生活。</p>
         <div class="hero-btns">
           <a href="/articles/dev-log" class="btn-primary">阅读文章</a>
-          <a href="/admin/" class="btn-alt">进入后台</a>
+          <a href="https://article.923577.xyz/admin/" class="btn-alt">进入后台</a>
         </div>
       </div>
     </div>

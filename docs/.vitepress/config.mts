@@ -10,7 +10,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '文章列表', link: '/articles/vibecoding' },
       { text: '返回个人主页', link: 'https://923577.xyz' },
-      { text: '🔧 后台', link: '/admin/', title: '管理后台' }
+      { text: '🔧 后台', link: 'https://article.923577.xyz/admin/', title: '管理后台' }
     ],
 
     sidebar: [
@@ -26,7 +26,7 @@ export default defineConfig({
         text: '🔧 管理',
         collapsed: true,
         items: [
-          { text: '进入后台 (admin)', link: '/admin/' }
+          { text: '进入后台 (admin)', link: 'https://article.923577.xyz/admin/' }
         ]
       }
     ],
