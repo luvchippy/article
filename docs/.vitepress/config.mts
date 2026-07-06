@@ -5,14 +5,12 @@ export default defineConfig({
   description: "个人知识库",
   base: '/',
 
-  
-  // 极简主题配置
   themeConfig: {
     nav: [
       { text: '首页', link: '/' },
       { text: '文章列表', link: '/articles/vibecoding' },
       { text: '返回个人主页', link: 'https://923577.xyz' },
-      { text: '⚙', link: '/admin/', title: '管理后台' }
+      { text: '🔧 后台', link: '/admin/', title: '管理后台' }
     ],
 
     sidebar: [
@@ -23,6 +21,13 @@ export default defineConfig({
           { text: 'Vibe Coding：与 AI 共舞', link: '/articles/vibecoding' },
           { text: 'Hello World', link: '/articles/hello-world' }
         ]
+      },
+      {
+        text: '🔧 管理',
+        collapsed: true,
+        items: [
+          { text: '进入后台 (admin)', link: '/admin/' }
+        ]
       }
     ],
 
@@ -31,7 +36,10 @@ export default defineConfig({
     ],
 
     search: {
-      provider: 'local' // 自带本地搜索，飞书级体验
-    }
+      provider: 'local'
+    },
+
+    // 404 page routing fix — don't let VitePress SPA intercept admin
+    ignoreDeadLinks: true
   }
 })

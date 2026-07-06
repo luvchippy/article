@@ -1,0 +1,3 @@
+# Cloudflare Pages redirects — ensure admin works
+/admin  /admin/  301
+/admin/  /admin/index.html  200
